@@ -1,0 +1,425 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body{
+    background: url("img/back8.png") no-repeat center;
+    background-size: cover;
+    height: 100vh;
+    display:grid;
+    place-items: center;
+    font-family: 'Press Start 2P', cursive;
+    color: white;
+
+}
+#route{
+    background: url("img/route8.png");
+    height: 2400vw;
+    min-width: 27.5%;
+    width: 19%;
+    position: relative;
+    display: flex;
+    overflow: hidden;
+
+}
+
+.container{
+    position: absolute;
+    top: 10%;
+    left: 1%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    background-color: rgba(0, 0, 0, 0.7);
+    border-radius: 4%;
+}
+
+
+h1 {
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+
+.container a
+ {
+    padding: 0.5rem 1rem;
+    background-color: black;
+    color: white;
+    /*border: 2px solid lime;*/
+    border-radius: 5px;
+    font-size: 1rem;
+    text-align: center;
+    text-decoration: none;
+
+}
+.container a:hover{
+    background-color: grey;
+    box-shadow: 0 0 20px gray, 0 0 40px grey;
+
+    }
+
+.container a:focus{
+    outline: none;
+}
+
+/* Style général pour le dialog */
+dialog {
+    width: 80%;
+    max-width: 600px;
+    padding: 20px;
+    border: 2px solid #ccc;
+    border-radius: 8px;
+    background-color: #fff;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+}
+
+/* Style pour le titre */
+dialog h2 {
+    margin-top: 0;
+    font-size: 1.5rem;
+    color: #333;
+}
+
+/* Style pour le paragraphe */
+dialog p {
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #666;
+}
+
+/* Style pour les boutons */
+dialog button {
+    margin-top: 4px;
+    padding: 5px 10px;
+    font-size: 0.6rem;
+    border: none;
+    background-color: #131313;
+    color: #fff;
+    cursor: pointer;
+    border-radius: 4%;
+    transition: background-color 0.3s ease;
+}
+
+dialog button:focus {
+    outline: none;
+}
+
+dialog button:hover {
+    background-color: #636e7a;
+}
+
+/* Style pour le bouton de fermeture */
+dialog #closeBtn {
+    position: absolute;
+
+    top: 5px;
+    right: 6px;
+}
+
+
+
+#scoreTime{
+    position: absolute;
+    top: 10%;
+    right: 1%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    background-color: rgba(0, 0, 0, 0.7);
+    /*border: 2px solid lime;*/
+    border-radius: 10px;
+    /*box-shadow: 0 0 10px lime, 0 0 20px lime;*/
+}
+
+#score, #timer {
+    padding: 0.5rem 1rem;
+    background-color: black;
+    color: lime;
+    /*border: 2px solid lime;*/
+    border-radius: 5px;
+    font-size: 1rem;
+    text-align: center;
+    /*box-shadow: 0 0 10px lime, 0 0 20px lime;*/
+}
+/*#score {*/
+/*    top: 1%;*/
+/*    right: %;*/
+/*}*/
+
+/*#timer {*/
+/*    top: 5%;*/
+/*    right: 1%;*/
+/*}*/
+
+
+#maVoiture, #voitureblack, #voituregry, #voitureblue{
+
+    display: flex;
+    justify-content: center;
+    position: absolute;
+    z-index: 10;
+    width:3vw;
+    height: 10vh;
+
+    border: 2px solid #1e6a49;
+
+}
+#voitureblack{
+    left:19vw;
+    top:20vh;
+
+    /*border: 2px solid #af8d1c;*/
+}
+
+#voituregry{
+    left:15vw;
+    top:35vh;
+    transition: left 0.8s ease-out;
+    /*border: 2px solid #af8d1c;*/
+}
+#voitureblue{
+
+    left:3%;
+    top:50vh;
+    transition: right 0.6s ease-out;
+    /*border: 2px solid #8c16b4;*/
+
+}
+.voitureimg{
+    /*width: 10vh;*/
+    /*width: 50px;*/
+}
+
+#maVoiture{
+
+    left:10vw;
+    /*width:10vw;*/
+    /*height:10vh;*/
+    top:76vh;
+    transition: top 0.4s ease-out,
+                left 0.4s ease-out;
+    /*border: 1px solid red;*/
+}
+
+@keyframes move2 {
+    0% { top: -20vh; }
+    100% { top: 100vh; }
+}
+@keyframes move3 {
+    0% { top: -23vh; }
+    100% { top: 100vh; }
+}
+@keyframes move4 {
+    0% { top: -22vh; }
+    100% { top: 300vh; }
+}
+/*@keyframes animRoute {*/
+/*    0% { top: -100vh; }*/
+/*    100% { top: 100vh; }*/
+
+/*}*/
+@keyframes animRoute {
+    0% { background-position: 0 0; }
+    100% { background-position: 0 200vh; }
+}
+
+
+/* grand ecran */
+@media (max-width: 800px) {
+
+   #route {
+     width:50%;
+       min-width: 320px;
+   }
+    #maVoiture, #voitureblack, #voituregry, #voitureblue {
+        width: 3vw;
+        height: 8vh;
+    }
+    #voitureblack{
+        left:16vw;
+    }
+    #voituregry{
+        left:13vw;
+    }
+    .container a {
+        padding: 0.8rem 1rem;
+        font-size: 0.7rem;
+
+
+    }
+    #scoreTime{
+        width: 20%;
+
+
+}
+}
+
+@media (min-width: 1400px) {
+
+    #route {
+        width:18.4%;
+        min-width: 320px;
+    }
+    #maVoiture, #voitureblack, #voituregry, #voitureblue {
+        width: 2vw;
+        height: 8vh;
+    }
+    #voitureblack{
+        left:15vw;
+    }
+    #voituregry{
+        left:13vw;
+
+
+    }
+    #voitureblue{
+        left :4%;
+
+    }
+
+    /*.container a {*/
+    /*    padding: 0.8rem 1rem;*/
+    /*    font-size: 0.7rem;*/
+    /*}*/
+
+}
+
+.modal-container {
+
+    display: none;
+    position: fixed;
+    z-index: 10;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    align-items: center;
+    justify-content: center;
+
+}
+
+.modal {
+    background-color: white;
+    padding: 20px;
+    border-radius: 5px;
+    text-align: center;
+    max-width: 80%;
+}
+
+.modal h2 {
+    margin-top: 0;
+    color: red;
+}
+
+.modal-buttons {
+    margin-top: 20px;
+}
+
+.modal-buttons a {
+    padding: 10px 20px;
+    margin: 0 10px;
+    font-size: 1rem;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+    background-color: #007bff;
+    color: white;
+    text-decoration: none;
+}
+
+.modal-buttons a:hover {
+    background-color: grey;
+    box-shadow: 0 0 20px gray, 0 0 40px grey;
+}
+
+/* Style de la boîte de dialogue */
+.win-dialog {
+    display: none; /* Caché par défaut */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8); /* Fond semi-transparent */
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.win-content {
+    background-color: #444; /* Fond sombre pour contraster avec le texte */
+    color: #fff; /* Texte blanc */
+    padding: 40px; /* Ajout d'espace autour du contenu */
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    max-width: 500px; /* Plus large */
+    width: 90%;
+}
+
+.win-content h2 {
+    margin: 0 0 20px;
+    font-size: 26px;
+}
+
+.win-content p {
+    margin: 0 0 30px;
+    font-size: 18px;
+}
+
+.win-icons {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+}
+
+.win-icons img {
+    width: 50px; /* Ajustez la taille des icônes */
+    height: 50px;
+    margin: 5px;
+}
+
+.win-buttons {
+    display: flex;
+    justify-content: space-around;
+}
+
+.win-button {
+    padding: 15px 25px; /* Plus grand padding */
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.cv-button {
+    background-color: #28a745; /* Vert */
+    color: white;
+}
+
+.cv-button:hover {
+    background-color: #218838;
+}
+
+.quit-button {
+    background-color: #dc3545; /* Rouge */
+    color: white;
+}
+
+.quit-button:hover {
+    background-color: #c82333;
+}
