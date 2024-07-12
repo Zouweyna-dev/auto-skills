@@ -1,21 +1,23 @@
 @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
-*{
+
+* {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
-body{
+body {
     background: url("img/back8.png") no-repeat center;
     background-size: cover;
     height: 100vh;
-    display:grid;
+    display: grid;
     place-items: center;
     font-family: 'Press Start 2P', cursive;
     color: white;
 
 }
-#route{
+
+#route {
     background: url("img/route8.png");
     height: 2400vw;
     min-width: 27.5%;
@@ -26,7 +28,7 @@ body{
 
 }
 
-.container{
+.container {
     position: absolute;
     top: 10%;
     left: 1%;
@@ -46,8 +48,7 @@ h1 {
 }
 
 
-.container a
- {
+.container a {
     padding: 0.5rem 1rem;
     background-color: black;
     color: white;
@@ -58,13 +59,14 @@ h1 {
     text-decoration: none;
 
 }
-.container a:hover{
+
+.container a:hover {
     background-color: grey;
     box-shadow: 0 0 20px gray, 0 0 40px grey;
 
-    }
+}
 
-.container a:focus{
+.container a:focus {
     outline: none;
 }
 
@@ -128,8 +130,7 @@ dialog #closeBtn {
 }
 
 
-
-#scoreTime{
+#scoreTime {
     position: absolute;
     top: 10%;
     right: 1%;
@@ -154,6 +155,7 @@ dialog #closeBtn {
     text-align: center;
     /*box-shadow: 0 0 10px lime, 0 0 20px lime;*/
 }
+
 /*#score {*/
 /*    top: 1%;*/
 /*    right: %;*/
@@ -165,128 +167,159 @@ dialog #closeBtn {
 /*}*/
 
 
-#maVoiture, #voitureblack, #voituregry, #voitureblue{
+#maVoiture, #voitureblack, #voituregry, #voitureblue {
 
     display: flex;
     justify-content: center;
     position: absolute;
     z-index: 10;
-    width:3vw;
+    width: 3vw;
     height: 10vh;
 
-    border: 2px solid #1e6a49;
+    /*border: 2px solid #1e6a49;*/
 
 }
-#voitureblack{
-    left:19vw;
-    top:20vh;
+
+#voitureblack {
+    left: 19vw;
+    top: 20vh;
 
     /*border: 2px solid #af8d1c;*/
 }
 
-#voituregry{
-    left:15vw;
-    top:35vh;
+#voituregry {
+    left: 15vw;
+    top: 35vh;
     transition: left 0.8s ease-out;
     /*border: 2px solid #af8d1c;*/
 }
-#voitureblue{
 
-    left:3%;
-    top:50vh;
+#voitureblue {
+
+    left: 3%;
+    top: 50vh;
     transition: right 0.6s ease-out;
     /*border: 2px solid #8c16b4;*/
 
 }
-.voitureimg{
+
+.voitureimg {
     /*width: 10vh;*/
     /*width: 50px;*/
 }
 
-#maVoiture{
+#maVoiture {
 
-    left:10vw;
+    left: 10vw;
     /*width:10vw;*/
     /*height:10vh;*/
-    top:76vh;
+    top: 76vh;
     transition: top 0.4s ease-out,
-                left 0.4s ease-out;
+    left 0.4s ease-out;
     /*border: 1px solid red;*/
 }
 
 @keyframes move2 {
-    0% { top: -20vh; }
-    100% { top: 100vh; }
+    0% {
+        top: -20vh;
+    }
+    100% {
+        top: 100vh;
+    }
 }
+
 @keyframes move3 {
-    0% { top: -23vh; }
-    100% { top: 100vh; }
+    0% {
+        top: -23vh;
+    }
+    100% {
+        top: 100vh;
+    }
 }
+
 @keyframes move4 {
-    0% { top: -22vh; }
-    100% { top: 300vh; }
+    0% {
+        top: -22vh;
+    }
+    100% {
+        top: 300vh;
+    }
 }
+
 /*@keyframes animRoute {*/
 /*    0% { top: -100vh; }*/
 /*    100% { top: 100vh; }*/
 
 /*}*/
 @keyframes animRoute {
-    0% { background-position: 0 0; }
-    100% { background-position: 0 200vh; }
+    0% {
+        background-position: 0 0;
+    }
+    100% {
+        background-position: 0 200vh;
+    }
 }
 
 
 /* grand ecran */
 @media (max-width: 800px) {
 
-   #route {
-     width:50%;
-       min-width: 320px;
-   }
+    #route {
+        width: 50%;
+        min-width: 320px;
+    }
+
     #maVoiture, #voitureblack, #voituregry, #voitureblue {
         width: 3vw;
         height: 8vh;
     }
-    #voitureblack{
-        left:16vw;
+
+    #voitureblack {
+        left: 16vw;
     }
-    #voituregry{
-        left:13vw;
+
+    #voituregry {
+        left: 13vw;
     }
+
     .container a {
         padding: 0.8rem 1rem;
         font-size: 0.7rem;
 
 
     }
-    #scoreTime{
+
+    #scoreTime {
         width: 20%;
 
 
-}
+    }
 }
 
 @media (min-width: 1400px) {
 
     #route {
-        width:18.4%;
+        width: 18.4%;
         min-width: 320px;
     }
+
     #maVoiture, #voitureblack, #voituregry, #voitureblue {
         width: 2vw;
         height: 8vh;
     }
-    #voitureblack{
-        left:15vw;
+
+    #voitureblack {
+        left: 15vw;
     }
-    #voituregry{
-        left:13vw;
+
+    #voituregry {
+        left: 13vw;
 
 
     }
-    #voitureblue{
-        left :4%;
+
+    #voitureblue {
+        left: 4%;
 
     }
 
