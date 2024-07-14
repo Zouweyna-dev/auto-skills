@@ -20,8 +20,8 @@ body {
 #route {
     background: url("img/route8.png");
     height: 2400vw;
-    min-width: 27.5%;
-    width: 19%;
+    /*min-width: 27.5%;*/
+    /*width: 19%;*/
     position: relative;
     display: flex;
     overflow: hidden;
@@ -70,7 +70,7 @@ h1 {
     outline: none;
 }
 
-/* Style général pour le dialog */
+
 dialog {
     width: 80%;
     max-width: 600px;
@@ -86,21 +86,20 @@ dialog {
     z-index: 1000;
 }
 
-/* Style pour le titre */
 dialog h2 {
     margin-top: 0;
     font-size: 1.5rem;
     color: #333;
 }
 
-/* Style pour le paragraphe */
+
 dialog p {
     font-size: 1rem;
     line-height: 1.5;
     color: #666;
 }
 
-/* Style pour les boutons */
+
 dialog button {
     margin-top: 4px;
     padding: 5px 10px;
@@ -121,7 +120,7 @@ dialog button:hover {
     background-color: #636e7a;
 }
 
-/* Style pour le bouton de fermeture */
+
 dialog #closeBtn {
     position: absolute;
 
@@ -259,19 +258,27 @@ dialog #closeBtn {
         background-position: 0 200vh;
     }
 }
+@media (min-width: 800px) {
 
+    #route {
+        width:36%;
+        min-width: 30%;
+
+    }
+}
 
 /* grand ecran */
 @media (max-width: 800px) {
 
     #route {
-        width: 50%;
-        min-width: 320px;
+        width: 70%;
+        min-width: 50%;
+
     }
 
     #maVoiture, #voitureblack, #voituregry, #voitureblue {
-        width: 3vw;
-        height: 8vh;
+        width: 5vw;
+        height: 10vh;
     }
 
     #voitureblack {
@@ -290,17 +297,17 @@ dialog #closeBtn {
     }
 
     #scoreTime {
-        width: 20%;
+        width: 15%;
 
 
     }
 }
 
-@media (min-width: 1400px) {
+@media (min-width: 1000px) {
 
     #route {
         width: 18.4%;
-        min-width: 320px;
+        min-width: 341px;
     }
 
     #maVoiture, #voitureblack, #voituregry, #voitureblue {
@@ -381,26 +388,26 @@ dialog #closeBtn {
 
 /* Style de la boîte de dialogue */
 .win-dialog {
-    display: none; /* Caché par défaut */
+    display: none;
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.8); /* Fond semi-transparent */
+    background-color: rgba(0, 0, 0, 0.8);
     justify-content: center;
     align-items: center;
     z-index: 1000;
 }
 
 .win-content {
-    background-color: #444; /* Fond sombre pour contraster avec le texte */
-    color: #fff; /* Texte blanc */
-    padding: 40px; /* Ajout d'espace autour du contenu */
+    background-color: #444;
+    color: #fff;
+    padding: 40px;
     border-radius: 12px;
     text-align: center;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-    max-width: 500px; /* Plus large */
+    max-width: 500px;
     width: 90%;
 }
 
@@ -422,7 +429,7 @@ dialog #closeBtn {
 }
 
 .win-icons img {
-    width: 50px; /* Ajustez la taille des icônes */
+    width: 50px;
     height: 50px;
     margin: 5px;
 }
@@ -433,14 +440,14 @@ dialog #closeBtn {
 }
 
 .win-button {
-    padding: 15px 25px; /* Plus grand padding */
+    padding: 15px 25px;
     text-decoration: none;
     border-radius: 5px;
     transition: background-color 0.3s, color 0.3s;
 }
 
 .cv-button {
-    background-color: #28a745; /* Vert */
+    background-color: #28a745;
     color: white;
 }
 
@@ -449,7 +456,7 @@ dialog #closeBtn {
 }
 
 .quit-button {
-    background-color: #dc3545; /* Rouge */
+    background-color: #dc3545;
     color: white;
 }
 

@@ -1,410 +1,384 @@
-let voitureGrey = document.getElementById("voituregry");
-let voitureBlue = document.getElementById("voitureblue");
-let voitureBlack = document.getElementById("voitureblack");
-let maVoiture = document.getElementById("maVoiture");
 
-
-let startPause = document.getElementById('start');
-let scoreDisplay = document.getElementById('score');
-let score = 0;
-let scoreInterval;
-
-
-let route = document.getElementById("route");
-let timerDisplay = document.getElementById('timer');
-
-let isPlaying = false;
-let gameInterval;
-
-let startTime;
-let timerInterval;
-let elapsedTime = 0;
-
-
-let voitureBlackInterval;
-let voitureGreyInterval;
-let voitureBlueInterval;
-
-const modalContainer = document.getElementById('modal-container');
-const btnReplay = document.getElementById('btn-replay');
-const btnExit = document.getElementById('btn-exit');
-
-let showInterval;
-
-let imgElement = document.createElement("img");
-
-const dialog = document.getElementById('dialog');
-const cv = document.getElementById('cv');
-const quitLink = document.getElementById('retour');
-
-
-const rulesBtn = document.getElementById('rulesBtn');
-const rulesModal = document.getElementById('rulesModal');
-const closeBtn = document.getElementById('closeBtn');
-
-
-rulesBtn.addEventListener('click', () => {
-    rulesModal.showModal();
-});
-
-// Ajoutez un événement de clic au bouton de fermeture pour fermer le dialog
-closeBtn.addEventListener('click', () => {
-    rulesModal.close();
-});
-
-
-window.addEventListener("keydown", moveVoiture);
-
-// Ajoute un écouteur d'événements pour détecter quand le bouton startPause est cliqué
-// Si le jeu est en cours (isPlaying est true), la fonction pauseGame() est appelée pour mettre le jeu en pause
-// Si le jeu est en pause (isPlaying est false), la fonction startGame() est appelée pour démarrer ou reprendre le jeu
-
-startPause.addEventListener('click', () => {
-    if (isPlaying) {
-        pauseGame();
-    } else {
-        startGame();
+class Cars{
+    constructor(elementId, top, left){
+    this.element = document.getElementById(elementId);
+    this.top = top;
+    this.left = left;
+    // this.width = this.element.offsetWidth;
+    // this.height = this.element.offsetHeight;
     }
-});
-// Fonction qui permet de vérifier si le bouton PAUSE est appuyé
-// Si oui, tout se met en pause : les voitures et le chronomètre s'arrêtent
-function pauseGame() {
-    isPlaying = false;
-    startPause.textContent = 'PLAY';
-    clearInterval(gameInterval);
-    clearInterval(timerInterval);
-    clearInterval(voitureBlackInterval);
-    clearInterval(voitureGreyInterval);
-    clearInterval(voitureBlueInterval);
-    clearInterval(scoreInterval);
-    clearInterval(showInterval);
 
-    route.style.animationPlayState = 'paused';
-    voitureBlack.style.animationPlayState = 'paused';
-    voitureGrey.style.animationPlayState = 'paused';
-    voitureBlue.style.animationPlayState = 'paused';
-    imgElement.style.animationPlayState = "paused";
+    // Méthode pour déplacer la voiture du joueur en fonction des touches de direction gauche ou droite
+
+    // Méthode pour déplacer la voiture vers la gauche
+    moveLeft(distance) {
+        this.left -= distance;
+        this.element.style.left = `${this.left}vw`;
+    }
+
+    // Méthode pour déplacer la voiture vers la droite
+    moveRight(distance) {
+        this.left += distance;
+        this.element.style.left = `${this.left}vw`;
+    }
+
+
+    // Méthode pour vérifier s'il y a une collision avec une autre voiture
+        checkCollision(car) {
+            let car1 = this.element.getBoundingClientRect();
+            let car2 = car.element.getBoundingClientRect();
+
+            return !(car1.right < car2.left ||
+                car1.left > car2.right ||
+                car1.bottom < car2.top ||
+                car1.top > car2.bottom);
+        }
+
+        // Méthode pour réinitialiser la position de la voiture
+        resetPosition(top, left) {
+            this.top = top;
+            this.left = left;
+            this.element.style.top = `${this.top}vh`;
+            this.element.style.left = `${this.left}vw`;
+        }
 }
 
-// Fonction qui permet de vérifier si le bouton PLAY est appuyé
-// Si oui, le bouton PLAY devient PAUSE et le jeu commence
-//      : les voitures circulent, la recherche de collision est lancée, et le chronomètre démarre
-function startGame() {
-    isPlaying = true;
-    startPause.textContent = 'PAUSE';
-    // startTime = Date.now();
-
-    gameInterval = setInterval(updateGame, 200);
-    timerInterval = setInterval(updateTimer, 1000);
-    // scoreInterval=setInterval(updateScore,2000);
-
-    route.style.animationPlayState = 'running';
-    voitureBlack.style.animationPlayState = 'running';
-    voitureGrey.style.animationPlayState = 'running';
-    voitureBlue.style.animationPlayState = 'running';
-    imgElement.style.animationPlayState = "running";
-
-    move();
-
-}
-
-function updateGame() {
-    collision();
-    // updateScore();
-    // updateTimer();
-}
+class Game{
 
 
-// Fonction qui met à jour le score lorsque le joueur récupère une récompense.
-// S'il obtient toutes les récompenses, une boîte de dialogue s'affiche,
-// donnant accès au CV ou permettant de quitter le jeu et revenir à la page d'accueil.
-function updateScore() {
+    constructor() {
 
-    score += 10;
+        this.myCar = new Cars('maVoiture', 75, 10);
+        this.blackCar = new Cars('voitureblack', 20, 22);
+        this.greyCar = new Cars('voituregry', 35, 15);
+        this.blueCar = new Cars('voitureblue', 50, 5);
+        this.road=document.getElementById("route");
 
-    scoreDisplay.textContent = `Score: ${score}`;
+        this.roadVw=(this.road.clientWidth/window.innerWidth)*100;
 
-    console.log('score', score);
+        this.scoreDisplay = document.getElementById('score');
+        this.timerDisplay = document.getElementById('timer');
 
-    if (score >= 60) {
+        this.score = 0;
+        this.elapsedTime = 0;
+        this.isPlaying = false;
 
-        // Boucle à travers tabcomp pour afficher toutes les images obtenues
-        // for (let i = 0; i < tabcomp.length; i++) {
-        //     console.log('dans if ',tabcomp[i]);
-        //     let image = document.createElement('img');
-        //     image.src = tabcomp[i]; // Chemin de l'image dans tabcomp[i]
-        //
-        //     console.log('img src ',image.src);
-        //     image.style.width = '20px'; // Ajuster la taille des images si nécessaire
-        //     image.style.height = 'auto';
-        //     image.style.position='absolute';
-        //
-        //     image.style.zIndex="20";
-        //
-        //     // Ajoute l'image à la boîte de dialogue
-        //     dialog.appendChild(image);
-        // }
-        // alert("bravoooo");
+        this.dialog=document.getElementById('dialog');
+        this.cv=document.getElementById('cv');
+        this.quit=document.getElementById('quit');
 
-        dialog.style.display = 'flex';
+        this.startPauseBtn = document.getElementById('start');
 
-        pauseGame();
-        resetGame();
-//Boite de dialogue : sile joueur arrive à récuperer toutes les competence il gange et il pourra afficher le cv
+        this.modalContainer = document.getElementById('modal-container');
+        this.btnReplay = document.getElementById('btn-replay');
+        this.btnExit = document.getElementById('btn-exit');
 
-        cv.addEventListener('click', function (event) {
+        this.rulesModal = document.getElementById('rulesModal');
+        this.rulesBtn = document.getElementById('rulesBtn');
+        this.closeBtn = document.getElementById('closeBtn');
 
-            dialog.style.display = 'none';
-        });
+        this.imgElement = document.createElement('img');
+        this.skills = [
+            "img/html.png",
+            "img/css.png",
+            "img/js.png",
+            "img/angular.png",
+            "img/jquery.png",
+            "img/node.png"
+        ];
 
-        quitLink.addEventListener('click', function (event) {
+        this.initialize();
 
-            dialog.style.display = 'none';
+    }
+
+
+
+
+
+    // Méthode pour initialiser le jeu
+    initialize() {
+
+        window.addEventListener('keydown', this.moveCar.bind(this));
+
+        this.startPauseBtn.addEventListener('click',this.startPause.bind(this));
+
+        this.btnReplay.addEventListener('click', () => this.resetGame.bind(this));
+
+        this.btnExit.addEventListener('click', () =>
+            this.modalContainer.style.display = 'none');
+
+        this.rulesBtn.addEventListener( 'click', this.rules.bind(this));
+
+
+    }
+
+
+    rules(){
+
+        // Ajoutez un événement de clic sur games Rules la boite de dialog s'ouvre
+        this.rulesModal.style.display='flex';
+
+        // Ajoutez un événement de clic au bouton de fermeture pour fermer le dialog
+
+        this.closeBtn.addEventListener('click', () => {
+            this.rulesModal.style.display='none';
 
         });
+    }
+
+    // Méthode pour démarrer ou mettre en pause le jeu
+    startPause() {
+        if (this.isPlaying) {
+            this.pauseGame();
+        } else {
+            this.startGame();
+        }
+    }
+
+    // Méthode pour démarrer le jeu
+    startGame() {
+        this.isPlaying = true;
+        this.startPauseBtn.textContent = 'PAUSE';
+
+        this.gameInterval = setInterval(() => { this.updateGame(); }, 200);
+        this.timerInterval = setInterval(() => { this.updateTimer();}, 1000);
 
 
+        this.move();
+    }
+
+    // Méthode pour mettre en pause le jeu
+
+    pauseGame() {
+
+        this.isPlaying = false;
+        this.startPauseBtn.textContent = 'PLAY';
+
+        clearInterval(this.gameInterval);
+        clearInterval(this.timerInterval);
+        //clearInterval(this.voitureBlackInterval);
+        clearInterval(this.greyCarIntervaLeft);
+        clearInterval(this.greyCarIntervalout);
+      //  clearInterval(this.voitureBlueInterval);
+        clearInterval(this.showInterval);
+
+        this.pauseAnimation();
+    }
+    // Méthode pour mettre en pause l'animation des voitures et la route
+    pauseAnimation() {
+
+        this.road.style.animationPlayState="paused"
+        this.blackCar.element.style.animationPlayState = 'paused';
+        this.greyCar.element.style.animationPlayState = 'paused';
+        this.blueCar.element.style.animationPlayState = 'paused';
+        this.imgElement.style.animationPlayState = 'paused';
+    }
+
+    // Méthode pour animer la route et les voitures
+  palyAnimation() {
+
+      this.road.style.animation = "animRoute 8s linear infinite";
+      this.blackCar.element.style.animation = "move2 8s linear infinite";
+      this.greyCar.element.style.animation = "move3 9s linear infinite";
+      this.blueCar.element.style.animation = "move4 7s linear infinite";
     }
 
 
-}
+    // Méthode pour mettre à jour le jeu à chaque intervalle
+    updateGame() {
 
-// En cas de collision détectée entre le joueur et les autres voitures,
-// une boîte de dialogue 'Game Over' s'affiche et tout est réinitialisé
-
-function gameOver() {
-
-    modalContainer.style.display = 'flex';
-
-    pauseGame();
-
-    btnReplay.addEventListener('click', () => {
-        modalContainer.style.display = 'none';
-
-        resetGame();
-    });
-
-    btnExit.addEventListener('click', () => {
-        modalContainer.style.display = 'none';
-        resetGame();
-
-
-    });
-
-
-}
-
-
-// Cette fonction est appelée à intervalles réguliers pour augmenter le temps écoulé et mettre à jour l'affichage du chronomètre
-
-function updateTimer() {
-
-    elapsedTime++;
-    timerDisplay.textContent = `Time: ${elapsedTime}s`;
-}
-
-//Réinitialisation: cette fonction remet à 0 tous les paramètres du jeu et repositionne les voitures
-function resetGame() {
-    pauseGame();
-    score = 0;
-    scoreDisplay.textContent = 'Score: 0';
-    timerDisplay.textContent = 'Time: 0s';
-
-    maVoiture.style.top = '75vh';
-    maVoiture.style.left = '10vw';
-
-    voitureBlack.style.top = '20vh';
-    voitureGrey.style.top = '35vh';
-    voitureBlue.style.top = '50vh';
-
-    voitureBlack.style.left = '22vw';
-    voitureGrey.style.left = '15vw';
-    voitureBlue.style.left = '4vw';
-}
-
-//Fonction permet de déplacer la voiture (joueur) vers la gauche ou la droite en appuyant sur les touches de direction du clavier
-
-function moveVoiture(event) {
-    if (!isPlaying) return;
-
-    let left = parseInt(window.getComputedStyle(maVoiture).getPropertyValue('left'));
-    let top = parseInt(window.getComputedStyle(maVoiture).getPropertyValue('top'));
-
-// Convertir la position en 'vw'
-
-    left = (left / window.innerWidth) * 100;
-
-    // top = (top / window.innerWidth) * 100;
-    // console.log("left ", left);
-
-    if (event.key === 'ArrowLeft' && left > 0) {
-        maVoiture.style.left = `${left - 3}vw`;
-    }
-    let routeVw = (route.clientWidth / window.innerWidth) * 100;
-    let voitureVw = (maVoiture.clientWidth / window.innerWidth) * 100;
-    if (event.key === 'ArrowRight' && left < (routeVw - voitureVw)) {
-        maVoiture.style.left = `${left + 3}vw`;
+        this.collision();
     }
 
-    // console.log("left 2 ", left);
-    //
-    // if (event.key === 'ArrowUp' && top > 0) {
-    //     console.log('top ' ,top)
-    //     maVoiture.style.top = `${top - 1}vh`;
+    // Méthode pour mettre à jour le score lorsque le joueur récupère une compétence
+    updateScore() {
 
-    // console.log( 'maVoiture.style.top ', maVoiture.style.top ); }
+        this.score += 10;
+        console.log(' update', this.score);
+        this.scoreDisplay.textContent = `Score: ${this.score}`;
 
-    // if (event.key === 'ArrowDown' && top <  (route.clientHeight - maVoiture.clientHeight)) {
-    //     console.log('top down ' ,top)
-    //
-    //     maVoiture.style.top = `${top + 2}vh`;
-    //}
-}
+        if (this.score >= 60) {
 
-// Fonction qui anime le déplacement aléatoire des voitures gauche ou droite
-function move() {
-
-//Animation de la route et des voitures
-    route.style.animation = "animRoute 8s linear infinite";
-    voitureBlack.style.animation = "move2 8s linear infinite";
-    voitureGrey.style.animation = "move3 9s linear infinite";
-    voitureBlue.style.animation = "move4 7s linear infinite";
-
-    // maVoiture.style.animation="move4 2s linear infinite";
-
-    // voitureBlackInterval = setInterval(() => {
-    //     let num = Math.random() *  (route.offsetWidth - voitureBlackInterval.width);  // random entre 0 et 80
-    //     voitureBlack.style.left = `${num}vw`;
-    // }, 4000);
-// Intervalles pour déplacer les voitures aléatoirement
-    voitureGreyInterval = setInterval(() => {
-        let num = (Math.random() * (route.offsetWidth - voitureGrey.offsetWidth) / window.innerWidth) * 100;
-        voitureGrey.style.left = `${num}vw`;
-    }, 5000);
-
-    // voitureBlueInterval = setInterval(() => {
-    //     let num = Math.random() *(route.offsetWidth - voitureBlueInterval.width);  // random entre 0 et 80
-    //     voitureBlue.style.left = `${num}vw`;
-    // }, 6000);
-
-    showInterval = setInterval(cvCompetence, 5000);
-
-}
-
-
-// Fonction qui vérifie s'il y a une collision entre le joueur et les autres voitures
-function collision() {
-
-    if (collisionDetected(maVoiture, voitureBlack) ||
-        collisionDetected(maVoiture, voitureGrey) ||
-        collisionDetected(maVoiture, voitureBlue)) {
-
-        // Fonction appelée en cas de collision entre le joueur et une des voitures, arrêtant ainsi le jeu
-        gameOver();
-
-    }
-
-
-}
-
-//Fonction qui vérifie s'il ya une collision entre deux éléments
-function collisionDetected(object1, object2) {
-    let obj1 = object1.getBoundingClientRect();
-    let obj2 = object2.getBoundingClientRect();
-
-    return !(obj1.right < obj2.left ||
-        obj1.left > obj2.right ||
-        obj1.bottom < obj2.top ||
-        obj1.top > obj2.bottom);
-}
-
-
-let competence = [
-    "img/html.png",
-    "img/css.png",
-    "img/js.png",
-    "img/angular.png",
-    "img/jquery.png",
-    "img/node.png"
-];
-// Fonction qui affiche aléatoirement des images de compétences que le joueur doit récupérer
-let tabcomp = [];
-
-function cvCompetence() {
-
-    let randomImage = competence[Math.floor(Math.random() * competence.length)];
-
-    // Supprime toute image précédemment ajoutée à route avec la classe "randomImg"
-
-    route.querySelectorAll('.randomImg').forEach(img => img.remove());
-    // let existImage = route.querySelector('.randomImg');
-    // if (existImage) {
-    //     existImage.remove();
-    // }
-    // document.getElementById("image_X").style.display='none';
-
-    // Crée et configurer l'image
-
-    imgElement.classList.add('randomImg');
-    imgElement.src = randomImage;
-    imgElement.style.position = 'absolute';
-    imgElement.style.width = "10%";
-
-    // Ajoute l'image à la route du jeu
-
-    let randomLeft = Math.random() * (route.offsetWidth - imgElement.width);
-    let min = 540;
-    let max = 600;
-    let randomTop = Math.random() * (max - min) + min;
-    // console.log('top ', randomTop);
-    // console.log('route.offsetHeight  ',route.offsetHeight);
-    //console.log('imgElement.width ' , imgElement.width);
-    // console.log('left ', randomLeft)
-    imgElement.style.top = `${randomTop}px`;
-    imgElement.style.left = `${randomLeft}px`;
-    imgElement.style.animation = "move4 13s linear infinite";
-
-    // Ajoute l'image à la route du jeu
-
-    route.appendChild(imgElement);
-    let i = 0;
-
-    // Vérifie toutes les 100 millisecondes si la voiture a touché l'image de compétence
-    // Si oui, le joueur gagne 10 points et le score est mis à jour
-
-    const collisionInterval = setInterval(() => {
-
-        if (collisionDetected(maVoiture, imgElement)) {
-
-            console.log(imgElement);
-            tabcomp[i] = imgElement.src;
-            console.log(tabcomp[i]);
-            i++;
-
-            updateScore();
-            //  console.log(score);
-            route.removeChild(imgElement);
-
-
-            // Si la voiture (joueur) a touché l'image de compétence, supprime cette image de la route
-
-
-            //clearInterval(collisionInterval);
+            this.winDialog();
 
         }
-    }, 100);
+
+    }
+
+    // Méthode pour afficher la boîte de dialogue
+    winDialog() {
+
+        this.pauseGame();
+
+        this.dialog.style.display = 'flex';
+
+        this.cv.addEventListener('click', () => {
+            this.dialog.style.display = 'none';
 
 
-    // Supprime l'image après un délai, s'il n'a pas déjà été supprimé
+        });
 
-    // setTimeout(() => {
-    //     clearInterval(collisionInterval);
-    //     if (route.contains(imgElement)) {
-    //         route.removeChild(imgElement);
-    //     }
-    // }, 5000);  // 5000 milliseconds = 5 seconds
-    //
+        this.quit.addEventListener('click', () => {
+            this.dialog.style.display = 'none';
+
+            this.resetGame();
+
+        });
+
+    }
+
+    // Méthode pour réinitialiser le jeu
+    resetGame() {
+
+       // this.pauseGame();
+
+        this.score = 0;
+        this.scoreDisplay.textContent = 'Score: 0';
+        this.timerDisplay.textContent = 'Time: 0s';
+
+        this.myCar.resetPosition(75, 10);
+        this.blackCar.resetPosition(20, 22);
+        this.greyCar.resetPosition(35, 15);
+        this.blueCar.resetPosition(50, 4);
+    }
+
+    // Méthode pour mettre à jour le chronomètre
+    updateTimer() {
+        this.elapsedTime++;
+        this.timerDisplay.textContent = `Time: ${this.elapsedTime}s`;
+    }
+
+    // Méthode pour déplacer la voiture du joueur en fonction des touches de direction
+    moveCar(event) {
+        console.log('moveCar', this);
+
+        if (!this.isPlaying) return;
+
+        let left =
+            parseInt(window.getComputedStyle(this.myCar.element).getPropertyValue('left'));
+        //  let top = parseInt(window.getComputedStyle(maVoiture).getPropertyValue('top'));
+
+
+        console.log('left = ', left);
+        left=(left/window.innerWidth)*100;
+
+        if (event.key === 'ArrowLeft' && left >1.5) {
+
+            this.myCar.element.style.left = `${left - 3}vw`;
+
+        }
+
+        console.log('route = ', this.roadVw);
+
+        if (event.key === 'ArrowRight' && left < (this.roadVw - 3) ){
+            this.myCar.element.style.left = `${left +3}vw`;
+        }
+
+        }
+
+
+
+    // Méthode pour animer le mouvement aléatoire des voitures ennemies
+    move() {
+
+            this.palyAnimation()
+
+        this.greyCarIntervaLeft = setInterval(() => {
+            let num = Math.random() * 13;
+            this.greyCar.moveLeft(num);
+        }, 5000);
+
+
+        this.greyCarIntervalout=setTimeout(() => {
+
+            clearInterval(this.greyCarIntervaLeft);
+            greyCarIntervaLeft
+          setInterval(() => {
+                let num = Math.random() * 10;
+                this.greyCar.moveRight(num);
+            }, 8000);
+
+        }, 5000 + 8000);
+
+        // this.blueCarInterval = setInterval(() => {
+        //     let num = Math.random() * 18;
+        //     this.blueCar.moveRight(num);
+        // }, 5000);
+        // this.blackCarInterval = setInterval(() => {
+        //     let num = Math.random() * 18;
+        //     this.blackCar.moveLeft(num);
+        // }, 6000);
+
+        this.showInterval = setInterval(() => {
+            this.cvCompetence();
+        }, 5000);
+    }
+
+    // Méthode pour vérifier s'il y a une collision entre le joueur et les voitures ennemies
+    collision() {
+
+        if (this.myCar.checkCollision(this.blackCar) ||
+            this.myCar.checkCollision(this.greyCar) ||
+            this.myCar.checkCollision(this.blueCar)) {
+
+            this.gameOver();
+        }
+    }
+
+    // Méthode pour gérer le game over
+    gameOver() {
+
+        this.pauseGame();
+        this.modalContainer.style.display = 'flex';
+
+
+        this.btnReplay.addEventListener('click', () => {
+            this.modalContainer.style.display = 'none';
+
+        });
+
+        this.btnExit.addEventListener('click', () => {
+            this.modalContainer.style.display = 'none';
+        });
+        this.resetGame();
+    }
+
+    // Méthode pour afficher aléatoirement une compétence que le joueur doit récupérer
+    cvCompetence() {
+        let randomImage = this.skills[Math.floor(Math.random() * this.skills.length)];
+
+       this.road.querySelectorAll('.randomImage').forEach(img=>img.remove());
+
+        this.imgElement.classList.add('randomImage');
+        this.imgElement.src = randomImage;
+        this.imgElement.style.position = 'absolute';
+        this.imgElement.style.width = '10%';
+
+        let randomLeft = Math.random() * (this.road.offsetWidth - this.imgElement.width);
+        let randomTop = Math.random() * (600-540)+540;
+
+        this.imgElement.style.top = `${randomTop}px`;
+        this.imgElement.style.left = `${randomLeft}px`;
+        this.imgElement.style.animation = "move4 13s linear infinite";
+
+        this.road.appendChild(this.imgElement);
+
+       setInterval(() => {
+
+            if (this.myCar.checkCollision({ element: this.imgElement })) {
+
+                this.updateScore();
+
+                this.road.removeChild(this.imgElement);
+               // clearInterval(collisionInterval);
+            }
+        }, 100);
+    }
 
 
 }
+
+const game = new Game();
+
+
 
