@@ -267,12 +267,23 @@ dialog #closeBtn {
     }
 }
 
-/* grand ecran */
-@media (max-width: 800px) {
+/* petit ecran */
+
+
+
+@media (min-width: 600px) and (max-width: 1000px ){
 
     #route {
-        width: 70%;
+        width: 56%;
         min-width: 50%;
+
+    }
+}
+@media (max-width: 600px) {
+
+    #route {
+        width: 68%;
+        min-width: 40%;
 
     }
 
@@ -290,9 +301,8 @@ dialog #closeBtn {
     }
 
     .container a {
-        padding: 0.8rem 1rem;
-        font-size: 0.7rem;
-
+        padding: 0.1rem 1rem;
+        font-size: 0.5rem;
 
     }
 
@@ -302,7 +312,7 @@ dialog #closeBtn {
 
     }
 }
-
+/*garnd ecran*/
 @media (min-width: 1000px) {
 
     #route {
@@ -437,29 +447,30 @@ dialog #closeBtn {
 .win-buttons {
     display: flex;
     justify-content: space-around;
+    gap: 20px;
 }
 
 .win-button {
+    display: inline-block;
     padding: 15px 25px;
+    font-size: 1.2rem;
+    color: #ffffff;
+    background-color: rgba(106, 30, 91, 0.41);
     text-decoration: none;
     border-radius: 5px;
-    transition: background-color 0.3s, color 0.3s;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    transition: background-color 0.3s, transform 0.3s;
 }
 
-.cv-button {
-    background-color: #28a745;
-    color: white;
+.button:active {
+    background-color: #900c3f;
+    transform: translateY(0);
 }
 
-.cv-button:hover {
+.button:hover {
     background-color: #218838;
+    transform: translateY(-3px);
 }
 
-.quit-button {
-    background-color: #dc3545;
-    color: white;
-}
 
-.quit-button:hover {
-    background-color: #c82333;
-}
+

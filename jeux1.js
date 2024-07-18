@@ -8,33 +8,28 @@ class Cars{
     // this.height = this.element.offsetHeight;
     }
 
-    // Méthode pour déplacer la voiture du joueur en fonction des touches de direction gauche ou droite
-
-    // Méthode pour déplacer la voiture vers la gauche
     moveLeft(distance) {
         this.left -= distance;
         this.element.style.left = `${this.left}vw`;
     }
 
-    // Méthode pour déplacer la voiture vers la droite
     moveRight(distance) {
         this.left += distance;
         this.element.style.left = `${this.left}vw`;
     }
 
+    // Méthode pour vérifier s'il y a une collision
+        checkCollision(obj) {
+            let obj1 = this.element.getBoundingClientRect();
+            let obj2 = obj.element.getBoundingClientRect();
 
-    // Méthode pour vérifier s'il y a une collision avec une autre voiture
-        checkCollision(car) {
-            let car1 = this.element.getBoundingClientRect();
-            let car2 = car.element.getBoundingClientRect();
-
-            return !(car1.right < car2.left ||
-                car1.left > car2.right ||
-                car1.bottom < car2.top ||
-                car1.top > car2.bottom);
+            return !(obj1.right < obj2.left ||
+                obj1.left > obj2.right ||
+                obj1.bottom < obj2.top ||
+                obj1.top > obj2.bottom);
         }
 
-        // Méthode pour réinitialiser la position de la voiture
+        // Méthode pour réinitialiser la position des voitures
         resetPosition(top, left) {
             this.top = top;
             this.left = left;
@@ -44,8 +39,6 @@ class Cars{
 }
 
 class Game{
-
-
     constructor() {
 
         this.myCar = new Cars('maVoiture', 75, 10);
@@ -87,12 +80,9 @@ class Game{
             "img/node.png"
         ];
 
-        this.initialize();
+         this.initialize();
 
     }
-
-
-
 
 
     // Méthode pour initialiser le jeu
@@ -112,14 +102,10 @@ class Game{
 
     }
 
-
+// Boîte de dialogue qui explique les règles du jeu
     rules(){
 
-        // Ajoutez un événement de clic sur games Rules la boite de dialog s'ouvre
         this.rulesModal.style.display='flex';
-
-        // Ajoutez un événement de clic au bouton de fermeture pour fermer le dialog
-
         this.closeBtn.addEventListener('click', () => {
             this.rulesModal.style.display='none';
 
@@ -205,7 +191,7 @@ class Game{
 
     }
 
-    // Méthode pour afficher la boîte de dialogue
+    // Méthode pour afficher la boîte de dialogue si le joueur gagne la partie
     winDialog() {
 
         this.pauseGame();
@@ -248,7 +234,7 @@ class Game{
         this.timerDisplay.textContent = `Time: ${this.elapsedTime}s`;
     }
 
-    // Méthode pour déplacer la voiture du joueur en fonction des touches de direction
+    // Méthode pour déplacer la voiture du joueur en fonction des touches de direction ( gauche , droite)
     moveCar(event) {
         console.log('moveCar', this);
 
@@ -292,7 +278,7 @@ class Game{
         this.greyCarIntervalout=setTimeout(() => {
 
             clearInterval(this.greyCarIntervaLeft);
-            greyCarIntervaLeft
+          //  greyCarIntervaLeft
           setInterval(() => {
                 let num = Math.random() * 10;
                 this.greyCar.moveRight(num);
